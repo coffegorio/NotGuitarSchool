@@ -19,5 +19,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Доступ к микрофону нужен для работы тюнера гитары</string>
 </dict>
 </plist>

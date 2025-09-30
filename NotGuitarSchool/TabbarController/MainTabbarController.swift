@@ -19,7 +19,7 @@ class MainTabbarController: UITabBarController {
         let homeVC = HomeViewController()
         let homeNavController = UINavigationController(rootViewController: homeVC)
         homeNavController.tabBarItem = UITabBarItem(
-            title: "Home",
+            title: "Главная",
             image: UIImage(systemName: "house"),
             selectedImage: UIImage(systemName: "house.fill")
         )
@@ -27,7 +27,7 @@ class MainTabbarController: UITabBarController {
         let tunaVC = TunaViewController()
         let tunaNavController = UINavigationController(rootViewController: tunaVC)
         tunaNavController.tabBarItem = UITabBarItem(
-            title: "Tuner",
+            title: "Тюнер",
             image: UIImage(systemName: "tuningfork"),
             selectedImage: UIImage(systemName: "tuningfork")
         )
@@ -35,7 +35,7 @@ class MainTabbarController: UITabBarController {
         let learningVC = LearningViewController()
         let learningNavController = UINavigationController(rootViewController: learningVC)
         learningNavController.tabBarItem = UITabBarItem(
-            title: "Learn",
+            title: "Учеба",
             image: UIImage(systemName: "book"),
             selectedImage: UIImage(systemName: "book.fill")
         )
@@ -43,7 +43,7 @@ class MainTabbarController: UITabBarController {
         let profileVC = ProfileViewController()
         let profileNavController = UINavigationController(rootViewController: profileVC)
         profileNavController.tabBarItem = UITabBarItem(
-            title: "Profile",
+            title: "Профиль",
             image: UIImage(systemName: "person"),
             selectedImage: UIImage(systemName: "person.fill")
         )
