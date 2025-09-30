@@ -32,7 +32,7 @@ class AppCoordinator {
         case .auth:
             newRoot = AuthViewController(viewModel: AuthViewModel())
         case .main:
-            newRoot = MainViewController()
+            newRoot = MainTabbarController()
         }
         
         guard animated else {

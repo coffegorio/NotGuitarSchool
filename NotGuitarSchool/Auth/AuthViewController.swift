@@ -52,6 +52,7 @@ class AuthViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupKeyboardHandling()
+        setupActions()
     }
     
     // MARK: - UI Setup
@@ -153,6 +154,16 @@ class AuthViewController: UIViewController {
         ])
     }
     
+    //MARK: - настройка действий
+    
+    private func setupActions() {
+        enterButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func buttonTapped() {
+        viewModel.navigateNextScreen()
+    }
+    
     // MARK: - Keyboard Handling
     
     private func setupKeyboardHandling() {
@@ -198,4 +209,3 @@ class AuthViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 }
-

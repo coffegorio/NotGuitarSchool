@@ -12,4 +12,12 @@ class AuthViewModel {
     let headlineTitle: String = "Введите свой ключ-доступа к профилю. Получить его можно, обратившись к администраторам Не школы гитары!"
     let enterCodePlaceholder: String = "Введите ключ-доступа! 🔑"
     let logInButtonTitle: String = "Вперед!"
+    
+    func checkCode() {
+        
+    }
+    
+    func navigateNextScreen() {
+        AppState.shared.currentRoute = .main
+    }
 }
