@@ -113,25 +113,27 @@ class AuthViewController: UIViewController {
             containerView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16),
             
-            // Компоненты внутри контейнера
+            // Компоненты внутри контейнера - все одинаковой ширины
             greetingsTitle.topAnchor.constraint(equalTo: containerView.topAnchor),
             greetingsTitle.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            greetingsTitle.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor),
-            greetingsTitle.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor),
+            greetingsTitle.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            greetingsTitle.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
             headlineTitle.topAnchor.constraint(equalTo: greetingsTitle.bottomAnchor, constant: 12),
             headlineTitle.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            headlineTitle.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor),
-            headlineTitle.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor),
+            headlineTitle.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            headlineTitle.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
             codeTextField.topAnchor.constraint(equalTo: headlineTitle.bottomAnchor, constant: 24),
             codeTextField.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            codeTextField.widthAnchor.constraint(equalToConstant: 280),
+            codeTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            codeTextField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             codeTextField.heightAnchor.constraint(equalToConstant: 50),
             
             enterButton.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 16),
             enterButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            enterButton.widthAnchor.constraint(equalTo: codeTextField.widthAnchor),
+            enterButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            enterButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             enterButton.heightAnchor.constraint(equalToConstant: 50),
             enterButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])

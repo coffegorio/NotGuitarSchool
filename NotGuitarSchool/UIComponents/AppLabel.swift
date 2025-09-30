@@ -49,10 +49,12 @@ final class AppLabel: UILabel {
             font = UIFont.systemFont(ofSize: 32, weight: .bold)
             textColor = AppColors.textColor
             lineBreakMode = .byWordWrapping
+            textAlignment = .center
         case .headline:
             font = UIFont.systemFont(ofSize: 24, weight: .semibold)
             textColor = AppColors.textColor
             lineBreakMode = .byWordWrapping
+            textAlignment = .center
         case .body:
             font = UIFont.systemFont(ofSize: 16)
             textColor = AppColors.textColor
