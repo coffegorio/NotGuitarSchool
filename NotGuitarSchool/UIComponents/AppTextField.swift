@@ -39,7 +39,7 @@ final class AppTextField: UITextField {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.font = UIFont.systemFont(ofSize: 16)
         self.textColor = .label
-        self.textAlignment = .center
+        self.textAlignment = .left
         self.autocorrectionType = .no
         self.autocapitalizationType = .none
         self.clearButtonMode = .whileEditing

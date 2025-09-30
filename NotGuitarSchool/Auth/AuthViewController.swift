@@ -26,6 +26,7 @@ class AuthViewController: UIViewController {
     // MARK: - UI компоненты
     
     private var authAnimationView: LottieAnimationView?
+    private var animationContainer: UIView? // <----- Сохраняем контейнер
     
     private lazy var greetingsTitle = AppLabel(
         text: viewModel.greetingsTitle,
@@ -57,10 +58,11 @@ class AuthViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = AppColors.backgroundColor
+        view.clipsToBounds = true
+        view.layer.masksToBounds = true
         
         setupAnimation()
         
-        // Устанавливаем translatesAutoresizingMaskIntoConstraints для всех компонентов
         greetingsTitle.translatesAutoresizingMaskIntoConstraints = false
         headlineTitle.translatesAutoresizingMaskIntoConstraints = false
         codeTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -77,74 +79,83 @@ class AuthViewController: UIViewController {
         authAnimationView.contentMode = .scaleAspectFit
         authAnimationView.loopMode = .loop
         authAnimationView.animationSpeed = 1
-        
-        view.addSubview(authAnimationView)
         authAnimationView.play()
+        
+        // Создаём контейнер для анимации
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(authAnimationView)
+        
+        // Ограничения для самой анимации внутри контейнера
+        NSLayoutConstraint.activate([
+            authAnimationView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            authAnimationView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            authAnimationView.widthAnchor.constraint(equalToConstant: 300),
+            authAnimationView.heightAnchor.constraint(equalToConstant: 300)
+        ])
+        
+        // Важно: ограничение по высоте для контейнера!
+        NSLayoutConstraint.activate([
+            container.heightAnchor.constraint(equalToConstant: 220) // немного больше, чтобы дать запас
+        ])
+        
+        self.animationContainer = container
     }
     
     private func setupConstraints() {
-        var constraints: [NSLayoutConstraint] = []
-        
-        // Анимация сверху по центру (если загрузилась)
-        if let authAnimationView = authAnimationView {
-            constraints.append(contentsOf: [
-                authAnimationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-                authAnimationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                authAnimationView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
-                authAnimationView.heightAnchor.constraint(equalTo: authAnimationView.widthAnchor)
-            ])
+        var arrangedSubviews: [UIView] = []
+        if let animationContainer = animationContainer {
+            arrangedSubviews.append(animationContainer)
         }
         
-        // Создаем контейнер для центрирования всех компонентов
-        let containerView = UIView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(containerView)
+        let titleContainer = UIView()
+        titleContainer.translatesAutoresizingMaskIntoConstraints = false
+        titleContainer.addSubview(greetingsTitle)
+        titleContainer.addSubview(headlineTitle)
         
-        // Перемещаем компоненты в контейнер
-        containerView.addSubview(greetingsTitle)
-        containerView.addSubview(headlineTitle)
-        containerView.addSubview(codeTextField)
-        containerView.addSubview(enterButton)
-        
-        constraints.append(contentsOf: [
-            // Контейнер по центру экрана
-            containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            containerView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16),
+        NSLayoutConstraint.activate([
+            greetingsTitle.leadingAnchor.constraint(equalTo: titleContainer.leadingAnchor),
+            greetingsTitle.trailingAnchor.constraint(equalTo: titleContainer.trailingAnchor),
+            greetingsTitle.topAnchor.constraint(equalTo: titleContainer.topAnchor),
             
-            // Компоненты внутри контейнера - все одинаковой ширины
-            greetingsTitle.topAnchor.constraint(equalTo: containerView.topAnchor),
-            greetingsTitle.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            greetingsTitle.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            greetingsTitle.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            
+            headlineTitle.leadingAnchor.constraint(equalTo: titleContainer.leadingAnchor),
+            headlineTitle.trailingAnchor.constraint(equalTo: titleContainer.trailingAnchor),
             headlineTitle.topAnchor.constraint(equalTo: greetingsTitle.bottomAnchor, constant: 12),
-            headlineTitle.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            headlineTitle.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            headlineTitle.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            
-            codeTextField.topAnchor.constraint(equalTo: headlineTitle.bottomAnchor, constant: 24),
-            codeTextField.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            codeTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            codeTextField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            codeTextField.heightAnchor.constraint(equalToConstant: 50),
-            
-            enterButton.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 16),
-            enterButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            enterButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            enterButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            enterButton.heightAnchor.constraint(equalToConstant: 50),
-            enterButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            headlineTitle.bottomAnchor.constraint(equalTo: titleContainer.bottomAnchor)
         ])
         
-        NSLayoutConstraint.activate(constraints)
+        arrangedSubviews.append(titleContainer)
+        arrangedSubviews.append(contentsOf: [codeTextField, enterButton])
+        
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 16
+        
+        view.addSubview(stackView)
+        
+        if animationContainer != nil {
+            stackView.setCustomSpacing(24, after: arrangedSubviews[0])
+        }
+        stackView.setCustomSpacing(24, after: arrangedSubviews[arrangedSubviews.count - 3])
+        stackView.setCustomSpacing(16, after: codeTextField)
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            
+            codeTextField.heightAnchor.constraint(equalToConstant: 50),
+            enterButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
     
     // MARK: - Keyboard Handling
     
     private func setupKeyboardHandling() {
-        // Добавляем наблюдатели для клавиатуры
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillShow),
@@ -159,7 +170,6 @@ class AuthViewController: UIViewController {
             object: nil
         )
         
-        // Добавляем жест для скрытия клавиатуры при тапе на экран
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
@@ -169,15 +179,13 @@ class AuthViewController: UIViewController {
         guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         let keyboardHeight = keyboardFrame.cgRectValue.height
         
-        // Анимированно поднимаем контент вверх
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
-            self.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight / 3)
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut) {
+            self.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight / 5)
         }
     }
     
     @objc private func keyboardWillHide(notification: NSNotification) {
-        // Возвращаем контент в исходное положение
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseIn) {
             self.view.transform = .identity
         }
     }
@@ -190,3 +198,4 @@ class AuthViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 }
+
