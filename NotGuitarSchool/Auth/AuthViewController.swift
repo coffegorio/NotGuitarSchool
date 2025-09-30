@@ -50,6 +50,7 @@ class AuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupKeyboardHandling()
     }
     
     // MARK: - UI Setup
@@ -64,11 +65,6 @@ class AuthViewController: UIViewController {
         headlineTitle.translatesAutoresizingMaskIntoConstraints = false
         codeTextField.translatesAutoresizingMaskIntoConstraints = false
         enterButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(greetingsTitle)
-        view.addSubview(headlineTitle)
-        view.addSubview(codeTextField)
-        view.addSubview(enterButton)
         
         setupConstraints()
     }
@@ -99,35 +95,96 @@ class AuthViewController: UIViewController {
             ])
         }
         
-        // Заголовки
-        let topAnchor = authAnimationView?.bottomAnchor ?? view.safeAreaLayoutGuide.topAnchor
-        let topConstant: CGFloat = authAnimationView != nil ? 24 : 40
+        // Создаем контейнер для центрирования всех компонентов
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(containerView)
+        
+        // Перемещаем компоненты в контейнер
+        containerView.addSubview(greetingsTitle)
+        containerView.addSubview(headlineTitle)
+        containerView.addSubview(codeTextField)
+        containerView.addSubview(enterButton)
         
         constraints.append(contentsOf: [
-            // Заголовки по центру
-            greetingsTitle.topAnchor.constraint(equalTo: topAnchor, constant: topConstant),
-            greetingsTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            greetingsTitle.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16),
-            greetingsTitle.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16),
+            // Контейнер по центру экрана
+            containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            containerView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16),
+            containerView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16),
+            
+            // Компоненты внутри контейнера
+            greetingsTitle.topAnchor.constraint(equalTo: containerView.topAnchor),
+            greetingsTitle.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            greetingsTitle.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor),
+            greetingsTitle.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor),
             
             headlineTitle.topAnchor.constraint(equalTo: greetingsTitle.bottomAnchor, constant: 12),
-            headlineTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headlineTitle.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16),
-            headlineTitle.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16),
+            headlineTitle.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            headlineTitle.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor),
+            headlineTitle.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor),
             
-            // Текстфилд по центру
             codeTextField.topAnchor.constraint(equalTo: headlineTitle.bottomAnchor, constant: 24),
-            codeTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            codeTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            codeTextField.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            codeTextField.widthAnchor.constraint(equalToConstant: 280),
             codeTextField.heightAnchor.constraint(equalToConstant: 50),
             
-            // Кнопка по центру
             enterButton.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 16),
-            enterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            enterButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             enterButton.widthAnchor.constraint(equalTo: codeTextField.widthAnchor),
-            enterButton.heightAnchor.constraint(equalToConstant: 50)
+            enterButton.heightAnchor.constraint(equalToConstant: 50),
+            enterButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
         
         NSLayoutConstraint.activate(constraints)
+    }
+    
+    // MARK: - Keyboard Handling
+    
+    private func setupKeyboardHandling() {
+        // Добавляем наблюдатели для клавиатуры
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+        
+        // Добавляем жест для скрытия клавиатуры при тапе на экран
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardHeight = keyboardFrame.cgRectValue.height
+        
+        // Анимированно поднимаем контент вверх
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            self.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight / 3)
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        // Возвращаем контент в исходное положение
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            self.view.transform = .identity
+        }
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
