@@ -62,7 +62,7 @@ final class AppLabel: UILabel {
             textAlignment = .left
         case .caption:
             font = UIFont.systemFont(ofSize: 12)
-            textColor = .secondaryLabel
+            textColor = AppColors.textColor
             lineBreakMode = .byTruncatingTail
             textAlignment = .left
         }

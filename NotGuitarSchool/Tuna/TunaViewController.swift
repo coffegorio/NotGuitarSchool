@@ -131,10 +131,10 @@ class TunaViewController: UIViewController, TunaViewModelDelegate {
                 adviceLabel.text = "✅ Точно настроено!"
                 adviceLabel.textColor = .systemGreen
             } else if d > 0 {
-                adviceLabel.text = "⬇️ Ослабьте струну"
+                adviceLabel.text = "Ослабьте струну"
                 adviceLabel.textColor = absDiff < 2.5 ? .systemOrange : .systemRed
             } else {
-                adviceLabel.text = "⬆️ Подтяните струну"
+                adviceLabel.text = "Подтяните струну"
                 adviceLabel.textColor = absDiff < 2.5 ? .systemOrange : .systemRed
             }
         } else {
