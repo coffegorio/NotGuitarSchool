@@ -128,7 +128,7 @@ class TunaViewController: UIViewController, TunaViewModelDelegate {
             needleView.deviationHz = CGFloat(d)
             let absDiff = abs(d)
             if absDiff < 1 {
-                adviceLabel.text = "✅ Точно настроено!"
+                adviceLabel.text = "Точно настроено! 🎸"
                 adviceLabel.textColor = .systemGreen
             } else if d > 0 {
                 adviceLabel.text = "Ослабьте струну"
