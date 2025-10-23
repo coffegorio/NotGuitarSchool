@@ -154,8 +154,6 @@ class AuthViewController: UIViewController {
         ])
     }
     
-    //MARK: - настройка действий
-    
     private func setupActions() {
         enterButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
@@ -163,8 +161,6 @@ class AuthViewController: UIViewController {
     @objc private func buttonTapped() {
         viewModel.navigateNextScreen()
     }
-    
-    // MARK: - Keyboard Handling
     
     private func setupKeyboardHandling() {
         NotificationCenter.default.addObserver(
