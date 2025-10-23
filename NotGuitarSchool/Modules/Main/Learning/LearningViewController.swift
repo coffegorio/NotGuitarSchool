@@ -11,10 +11,11 @@ class LearningViewController: UIViewController, LearningViewModelDelegate {
     
     // MARK: - UI Components
     
-    private let segmentedControl = UISegmentedControl(items: ["Материалы", "Самопроверка"])
+    private let segmentedControl = UISegmentedControl(items: ["Материалы", "Самопроверка", "Аккорды"])
     private let containerView = UIView()
     private let materialsView = MaterialsView()
     private let quizzesView = QuizzesView()
+    private let chordsView = ChordsView()
     
     // MARK: - Properties
     
@@ -56,9 +57,11 @@ class LearningViewController: UIViewController, LearningViewModelDelegate {
         
         containerView.addSubview(materialsView)
         containerView.addSubview(quizzesView)
+        containerView.addSubview(chordsView)
         
         materialsView.isHidden = false
         quizzesView.isHidden = true
+        chordsView.isHidden = true
     }
     
     private func setupConstraints() {
@@ -66,6 +69,7 @@ class LearningViewController: UIViewController, LearningViewModelDelegate {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         materialsView.translatesAutoresizingMaskIntoConstraints = false
         quizzesView.translatesAutoresizingMaskIntoConstraints = false
+        chordsView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             // Segmented Control
@@ -90,7 +94,13 @@ class LearningViewController: UIViewController, LearningViewModelDelegate {
             quizzesView.topAnchor.constraint(equalTo: containerView.topAnchor),
             quizzesView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             quizzesView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            quizzesView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            quizzesView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            // Chords View
+            chordsView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            chordsView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            chordsView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            chordsView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
     
@@ -98,6 +108,8 @@ class LearningViewController: UIViewController, LearningViewModelDelegate {
         viewModel.delegate = self
         viewModel.loadMaterials()
         viewModel.loadQuizzes()
+        
+        chordsView.delegate = self
     }
     
     // MARK: - Actions
@@ -107,13 +119,9 @@ class LearningViewController: UIViewController, LearningViewModelDelegate {
         viewModel.selectSegment(at: selectedIndex)
         
         UIView.transition(with: containerView, duration: 0.3, options: .transitionCrossDissolve) {
-            if selectedIndex == 0 {
-                self.materialsView.isHidden = false
-                self.quizzesView.isHidden = true
-            } else {
-                self.materialsView.isHidden = true
-                self.quizzesView.isHidden = false
-            }
+            self.materialsView.isHidden = selectedIndex != 0
+            self.quizzesView.isHidden = selectedIndex != 1
+            self.chordsView.isHidden = selectedIndex != 2
         }
     }
     
@@ -150,6 +158,22 @@ extension LearningViewController: QuizViewControllerDelegate {
     func quizViewControllerDidComplete(_ quizViewController: QuizViewController, quizId: String) {
         viewModel.markQuizAsCompleted(quizId)
         quizViewController.dismiss(animated: true)
+    }
+}
+
+// MARK: - ChordsViewDelegate
+
+extension LearningViewController: ChordsViewDelegate {
+    func chordsViewDidSelectChord(_ chordsView: ChordsView, chord: Chord) {
+        // Show chord details
+        let alert = UIAlertController(
+            title: "Аккорд \(chord.name)",
+            message: "Категория: \(chord.category.rawValue)\nСложность: \(chord.difficulty.rawValue)",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
 

@@ -37,8 +37,8 @@ final class AppButton: UIButton {
     
     private func setup(title: String) {
         setTitle(title, for: .normal)
-        titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        layer.cornerRadius = 12
+        titleLabel?.font = UIFont.systemFont(ofSize: AppTypography.headline, weight: AppTypography.semibold)
+        layer.cornerRadius = AppCornerRadius.md
         clipsToBounds = true
         
         updateStyle()
@@ -50,13 +50,18 @@ final class AppButton: UIButton {
     private func updateStyle() {
         if isFilled {
             backgroundColor = buttonColor
-            setTitleColor(.white, for: .normal)
+            setTitleColor(AppColors.textInverse, for: .normal)
             layer.borderWidth = 0
+            layer.shadowColor = buttonColor.withAlphaComponent(0.3).cgColor
+            layer.shadowOffset = CGSize(width: 0, height: 2)
+            layer.shadowRadius = 4
+            layer.shadowOpacity = 1.0
         } else {
             backgroundColor = .clear
             setTitleColor(buttonColor, for: .normal)
             layer.borderColor = buttonColor.cgColor
             layer.borderWidth = 2
+            layer.shadowOpacity = 0
         }
     }
     

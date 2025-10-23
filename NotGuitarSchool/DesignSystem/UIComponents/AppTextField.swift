@@ -37,15 +37,15 @@ final class AppTextField: UITextField {
     private func setupUI(placeholder: String) {
         self.placeholder = placeholder
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.font = UIFont.systemFont(ofSize: 16)
-        self.textColor = .label
+        self.font = UIFont.systemFont(ofSize: AppTypography.body, weight: AppTypography.regular)
+        self.textColor = AppColors.textPrimary
         self.textAlignment = .left
         self.autocorrectionType = .no
         self.autocapitalizationType = .none
         self.clearButtonMode = .whileEditing
-        self.layer.cornerRadius = 12
+        self.layer.cornerRadius = AppCornerRadius.md
         self.clipsToBounds = true
-        self.setPadding(left: 12, right: 12)
+        self.setPadding(left: AppSpacing.md, right: AppSpacing.md)
         
         if isFilled {
             self.backgroundColor = fieldColor.withAlphaComponent(0.1)

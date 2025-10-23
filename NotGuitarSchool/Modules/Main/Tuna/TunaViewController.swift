@@ -19,6 +19,11 @@ class TunaViewController: UIViewController, TunaViewModelDelegate {
     private let selectTuningButton = AppButton(title: "Выбрать строй")
     private let needleView = TunerNeedleView()
     private let haptic = UINotificationFeedbackGenerator()
+    
+    // Metronome
+    private let metronomeView = MetronomeView()
+    private let metronomeToggleButton = AppButton(title: "Метроном", isFilled: false)
+    private var isMetronomeVisible = false
 
     private let viewModel = TunaViewModel()
 
@@ -67,9 +72,16 @@ class TunaViewController: UIViewController, TunaViewModelDelegate {
         needleView.rangeHz = 10
 
         selectTuningButton.translatesAutoresizingMaskIntoConstraints = false
-        [noteLabel, freqLabel, centsLabel, needleView, adviceLabel, tuningNameLabel, selectTuningButton].forEach { view.addSubview($0) }
+        metronomeToggleButton.translatesAutoresizingMaskIntoConstraints = false
+        metronomeView.translatesAutoresizingMaskIntoConstraints = false
+        
+        [noteLabel, freqLabel, centsLabel, needleView, adviceLabel, tuningNameLabel, selectTuningButton, metronomeToggleButton, metronomeView].forEach { view.addSubview($0) }
 
         selectTuningButton.addTarget(self, action: #selector(selectTuningTapped), for: .touchUpInside)
+        metronomeToggleButton.addTarget(self, action: #selector(metronomeToggleTapped), for: .touchUpInside)
+        
+        metronomeView.delegate = self
+        metronomeView.isHidden = true
 
         NSLayoutConstraint.activate([
             noteLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 48),
@@ -98,7 +110,20 @@ class TunaViewController: UIViewController, TunaViewModelDelegate {
             selectTuningButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             selectTuningButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             selectTuningButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            selectTuningButton.heightAnchor.constraint(equalToConstant: 50)
+            selectTuningButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            // Metronome toggle button
+            metronomeToggleButton.topAnchor.constraint(equalTo: selectTuningButton.bottomAnchor, constant: 16),
+            metronomeToggleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            metronomeToggleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            metronomeToggleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            metronomeToggleButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            // Metronome view
+            metronomeView.topAnchor.constraint(equalTo: metronomeToggleButton.bottomAnchor, constant: 16),
+            metronomeView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            metronomeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            metronomeView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
 
         // Initialize selected tuning title
@@ -113,6 +138,16 @@ class TunaViewController: UIViewController, TunaViewModelDelegate {
         let nav = UINavigationController(rootViewController: list)
         nav.modalPresentationStyle = .formSheet
         present(nav, animated: true)
+    }
+    
+    @objc private func metronomeToggleTapped() {
+        isMetronomeVisible.toggle()
+        
+        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
+            self.metronomeView.isHidden = !self.isMetronomeVisible
+            self.metronomeView.alpha = self.isMetronomeVisible ? 1.0 : 0.0
+            self.metronomeToggleButton.setTitle(self.isMetronomeVisible ? "Скрыть метроном" : "Показать метроном", for: .normal)
+        })
     }
 
     // MARK: - TunaViewModelDelegate
@@ -163,6 +198,25 @@ class TunaViewController: UIViewController, TunaViewModelDelegate {
 
     func tunaViewModelAudioError(_ message: String) {
         noteLabel.text = message
+    }
+}
+
+// MARK: - MetronomeViewDelegate
+
+extension TunaViewController: MetronomeViewDelegate {
+    func metronomeViewDidChangeTempo(_ metronomeView: MetronomeView, tempo: Int) {
+        // Handle tempo change
+        print("Tempo changed to: \(tempo)")
+    }
+    
+    func metronomeViewDidChangeTimeSignature(_ metronomeView: MetronomeView, timeSignature: TimeSignature) {
+        // Handle time signature change
+        print("Time signature changed to: \(timeSignature.displayString)")
+    }
+    
+    func metronomeViewDidTogglePlayback(_ metronomeView: MetronomeView, isPlaying: Bool) {
+        // Handle metronome playback toggle
+        print("Metronome isPlaying: \(isPlaying)")
     }
 }
 
