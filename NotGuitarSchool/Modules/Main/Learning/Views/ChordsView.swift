@@ -156,11 +156,11 @@ final class ChordsView: UIView {
             scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             // Content view
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: AppSpacing.md),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: AppSpacing.md),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -AppSpacing.md),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -AppSpacing.md),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -AppSpacing.xl),
             
             // Search field
             searchTextField.heightAnchor.constraint(equalToConstant: 50),
@@ -297,7 +297,7 @@ extension ChordsView: UICollectionViewDelegate {
 extension ChordsView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (collectionView.frame.width - AppSpacing.md * 3) / 2
-        return CGSize(width: width, height: 120)
+        return CGSize(width: width, height: 160)
     }
 }
 
@@ -384,7 +384,7 @@ final class ChordCell: UICollectionViewCell {
             fingeringView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: AppSpacing.sm),
             fingeringView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -AppSpacing.sm),
             fingeringView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -AppSpacing.sm),
-            fingeringView.heightAnchor.constraint(equalToConstant: 40)
+            fingeringView.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     

@@ -24,7 +24,7 @@ class HomeViewController: UIViewController {
         textColor: AppColors.textPrimary
     )
     private let quickActionsStack = UIStackView()
-    private let tunerButton = AppGradientButton(title: "🎵 Тюнер", gradient: AppGradients.primary)
+    private let tunerButton = AppGradientButton(title: "🎵 Тюнер", gradient: AppGradients.primary, cornerRadius: AppCornerRadius.round)
     private let lessonsButton = AppGradientButton(title: "📚 Уроки", gradient: AppGradients.success)
     private let practiceButton = AppGradientButton(title: "🎯 Практика", gradient: AppGradients.warning)
     
@@ -277,10 +277,10 @@ extension HomeViewController {
             numberOfLines: 0
         )
         
-        let startButton = AppButton(
+        let startButton = AppGradientButton(
             title: "Начать изучение",
-            isFilled: false,
-            color: AppColors.textInverse
+            gradient: AppGradients.success,
+            cornerRadius: AppCornerRadius.round
         )
         
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel, startButton])
