@@ -13,7 +13,7 @@ final class AppCardView: UIView {
     
     private let shadow: Shadow
     private let cornerRadius: CGFloat
-    private let backgroundColor: UIColor
+    private let cardBackgroundColor: UIColor
     
     // MARK: - Initialization
     
@@ -22,7 +22,7 @@ final class AppCardView: UIView {
         cornerRadius: CGFloat = AppCornerRadius.lg,
         shadow: Shadow = AppShadows.medium
     ) {
-        self.backgroundColor = backgroundColor
+        self.cardBackgroundColor = backgroundColor
         self.cornerRadius = cornerRadius
         self.shadow = shadow
         super.init(frame: .zero)
@@ -30,7 +30,7 @@ final class AppCardView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.backgroundColor = AppColors.surfacePrimary
+        self.cardBackgroundColor = AppColors.surfacePrimary
         self.cornerRadius = AppCornerRadius.lg
         self.shadow = AppShadows.medium
         super.init(coder: coder)
@@ -41,7 +41,7 @@ final class AppCardView: UIView {
     
     private func setup() {
         translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = backgroundColor
+        self.backgroundColor = cardBackgroundColor
         layer.cornerRadius = cornerRadius
         layer.masksToBounds = false
         
