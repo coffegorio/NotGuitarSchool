@@ -24,7 +24,7 @@ class HomeViewController: UIViewController {
         textColor: AppColors.textPrimary
     )
     private let quickActionsStack = UIStackView()
-    private let tunerButton = AppGradientButton(title: "🎵 Тюнер", gradient: AppGradients.primary, cornerRadius: AppCornerRadius.round)
+    private let tunerButton = AppGradientButton(title: "🎵 Тюнер", gradient: AppGradients.primary)
     private let lessonsButton = AppGradientButton(title: "📚 Уроки", gradient: AppGradients.success)
     private let practiceButton = AppGradientButton(title: "🎯 Практика", gradient: AppGradients.warning)
     
@@ -295,7 +295,9 @@ extension HomeViewController {
             stackView.topAnchor.constraint(equalTo: card.topAnchor, constant: AppSpacing.lg),
             stackView.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: AppSpacing.lg),
             stackView.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -AppSpacing.lg),
-            stackView.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -AppSpacing.lg)
+            stackView.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -AppSpacing.lg),
+            
+            startButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         return card

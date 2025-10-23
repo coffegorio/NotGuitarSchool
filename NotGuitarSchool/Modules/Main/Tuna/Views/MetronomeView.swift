@@ -83,7 +83,7 @@ final class MetronomeView: UIView {
     private let playButton = AppGradientButton(
         title: "▶️",
         gradient: AppGradients.success,
-        cornerRadius: AppCornerRadius.round
+        cornerRadius: 40
     )
     
     private let tempoStackView = UIStackView()
