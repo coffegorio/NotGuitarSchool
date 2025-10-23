@@ -280,7 +280,7 @@ extension HomeViewController {
         let startButton = AppGradientButton(
             title: "Начать изучение",
             gradient: AppGradients.success,
-            cornerRadius: AppCornerRadius.round
+            cornerRadius: AppCornerRadius.md
         )
         
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel, startButton])
